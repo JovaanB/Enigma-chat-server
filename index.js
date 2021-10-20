@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
-    cors: { origin: "https://dreamy-roentgen-59d64c.netlify.app", methods: ["GET", "POST"] },
+    cors: { origin: "https://priceless-mirzakhani-1e24cd.netlify.app", methods: ["GET", "POST"] },
 });
 
 app.use(cors());
