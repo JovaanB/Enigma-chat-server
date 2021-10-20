@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const socketio = require("socket.io");
@@ -12,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
-    cors: { origin: "https://inspiring-hugle-97ac8b.netlify.app", methods: ["GET", "POST"] },
+    cors: { origin: process.env.API_URL, methods: ["GET", "POST"] },
 });
 
 app.use(cors());
@@ -51,12 +52,9 @@ io.on("connection", (socket) => {
 });
 
 mongoose
-    .connect(
-        "mongodb+srv://Jovan:6QnBqMiGkLBE2zT@cluster0.fkwcy.mongodb.net/enigma-chat-db?retryWrites=true&w=majority",
-        {
-            useNewUrlParser: true,
-        }
-    )
+    .connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+    })
     .then(() => {
         app.use(express.json());
         app.use("/api", [userRoutes]);
