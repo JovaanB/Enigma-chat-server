@@ -11,7 +11,9 @@ const PORT = process.env.PORT || 5000;
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, { cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] } });
+const io = socketio(server, {
+    cors: { origin: "https://dreamy-roentgen-59d64c.netlify.app", methods: ["GET", "POST"] },
+});
 
 app.use(cors());
 app.use(router);
@@ -48,13 +50,20 @@ io.on("connection", (socket) => {
     });
 });
 
-mongoose.connect("mongodb://localhost:27017/enigma-chat-db", { useNewUrlParser: true }).then(() => {
-    app.use(express.json());
-    app.use("/api", [userRoutes]);
+mongoose
+    .connect(
+        "mongodb+srv://Jovan:6QnBqMiGkLBE2zT@cluster0.fkwcy.mongodb.net/enigma-chat-db?retryWrites=true&w=majority",
+        {
+            useNewUrlParser: true,
+        }
+    )
+    .then(() => {
+        app.use(express.json());
+        app.use("/api", [userRoutes]);
 
-    app.listen(4000, () => {
-        console.log("Serveur mongoDB démarré!");
+        app.listen(4000, () => {
+            console.log("Serveur mongoDB démarré!");
+        });
     });
-});
 
 server.listen(PORT, () => console.log(`Serveur démarré sur le port ${PORT}`));
