@@ -1,9 +1,11 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const socketio = require("socket.io");
 const http = require("http");
 const router = require("./router");
 const cors = require("cors");
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./users");
+const { addUser, removeUser, getUser, getUsersInRoom } = require("./io/users");
+const userRoutes = require("./routes/user");
 
 const PORT = process.env.PORT || 5000;
 
@@ -43,6 +45,15 @@ io.on("connection", (socket) => {
         if (user) {
             io.to(user.room).emit("message", { user: "admin", text: `Oh non! ${user.name} est parti :(` });
         }
+    });
+});
+
+mongoose.connect("mongodb://localhost:27017/enigma-chat-db", { useNewUrlParser: true }).then(() => {
+    app.use(express.json());
+    app.use("/api", [userRoutes]);
+
+    app.listen(4000, () => {
+        console.log("Serveur mongoDB démarré!");
     });
 });
 
